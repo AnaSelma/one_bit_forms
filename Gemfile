@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 gem 'omniauth'
-gem 'devise_token_auth', '~> 0.1.42'
+gem 'devise_token_auth'
 gem 'rack-cors'
 gem 'rack-attack'
 

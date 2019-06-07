@@ -51,7 +51,7 @@ RSpec.describe "Api::V1::Forms", type: :request do
         end
 
         it "returned form with right datas" do
-          expect(json).to eql(JSON.parse(@form.to_json))
+          expect(json.except('questions')).to eql(JSON.parse(@form.to_json))
         end
 
         it "returned associated questions" do
@@ -103,13 +103,13 @@ RSpec.describe "Api::V1::Forms", type: :request do
 
         it "form are created with correct data" do
           @form_attributes.each do |field|
-            expect(Form.first]field.first]).to eql(field.last)
+             expect(Form.first[field.first]).to eql(field.last)
           end
         end
 
         it "Returned data is correct" do
           @form_attributes.each do |field|
-            expect(json[fiels.first.to_s]).to eql(field.last)
+             expect(json[field.first.to_s]).to eql(field.last)
           end
         end
       end

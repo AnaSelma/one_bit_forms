@@ -15,7 +15,7 @@ module Requests
     end
 
     def header_without_authentication
-      return { 'content-type => application/json' }
+      return { 'content-type' => 'application/json' }
     end
   end
 end

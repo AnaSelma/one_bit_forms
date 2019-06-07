@@ -170,7 +170,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
-  devise_token_auth (~> 0.1.42)
+  devise_token_auth
   factory_bot_rails
   ffaker
   friendly_id (~> 5.1.0)
