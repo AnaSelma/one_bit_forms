@@ -25,12 +25,12 @@ RSpec.describe "Api::V1::Questions", type: :request do
 
         it "question are created with correct data" do
           @question_attributes.each do |field|
-            expect(Question.first[filed.first]).to eql(field.last)
+            expect(Question.first[field.first]).to eql(field.last)
           end
         end
 
         it "Returned data is correct" do
-          @question_attributes.each do |filed|
+          @question_attributes.each do |field|
               expect(json[field.first.to_s]).to eql(field.last)
             end
         end
@@ -65,12 +65,12 @@ RSpec.describe "Api::V1::Questions", type: :request do
   describe "PUT /questions" do
 
     context "with Invalid authentication headers" do
-      it_behaves_like :deny_without_authorization, :post, "/api/v1/questions/0"
+      it_behaves_like :deny_without_authorization, :post, "/api/v1/questions/"
     end
 
     context "With Valid authentication headers" do
       before do
-        @user = Create(:user)
+        @user = create(:user)
       end
 
       context "When question exists" do
@@ -80,7 +80,7 @@ RSpec.describe "Api::V1::Questions", type: :request do
             @form = create(:form, user: @user)
             @question = create(:question, form: @form)
             @question_attributes = attributes_for(:question)
-            put "/api/v1/question/#{@question.id}", params: {question: @question_attributes}, headers: header_with_authentication(@user)
+            put "/api/v1/questions/#{@question.id}", params: {question: @question_attributes}, headers: header_with_authentication(@user)
           end
 
           it "returns 200" do
@@ -96,7 +96,7 @@ RSpec.describe "Api::V1::Questions", type: :request do
 
           it "Returned data is correct" do
             @question_attributes.each do |field|
-              expect(jason[field.first.to_s]).to eql(field.last)
+              expect(json[field.first.to_s]).to eql(field.last)
             end
           end
         end
@@ -105,7 +105,7 @@ RSpec.describe "Api::V1::Questions", type: :request do
           before do
             @question = create(:question)
             @question_attributes = attributes_for(:question, id: @question.id)
-            put "/api/v1/question/#{@question.id}", params: {question: @question_attributes}, headers: header_with_authentication(@user)
+            put "/api/v1/questions/#{@question.id}", params: {question: @question_attributes}, headers: header_with_authentication(@user)
           end
 
           it "returns 403" do
@@ -120,7 +120,7 @@ RSpec.describe "Api::V1::Questions", type: :request do
         end
 
         it "returns 404" do
-          delete "/api/v1/question/0", params: {question: @question_attributes}, headers: header_with_authentication(@user)
+          delete "/api/v1/questions/0", params: {question: @question_attributes}, headers: header_with_authentication(@user)
           expect_status(404)
         end
       end

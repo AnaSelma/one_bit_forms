@@ -94,7 +94,7 @@ RSpec.describe "Api::V1::Forms", type: :request do
       context "And with valid params" do
         before do
           @form_attributes = attributes_for(:form)
-          post "api/v1/forms", params: {form: @form_attributes}, headers: header_with_authentication(@user)
+          post "/api/v1/forms", params: {form: @form_attributes}, headers: header_with_authentication(@user)
         end
 
         it "returns 200" do
@@ -103,13 +103,13 @@ RSpec.describe "Api::V1::Forms", type: :request do
 
         it "form are created with correct data" do
           @form_attributes.each do |field|
-             expect(Form.first[field.first]).to eql(field.last)
+            expect(Form.first[field.first]).to eql(field.last)
           end
         end
 
         it "Returned data is correct" do
           @form_attributes.each do |field|
-             expect(json[field.first.to_s]).to eql(field.last)
+            expect(json[field.first.to_s]).to eql(field.last)
           end
         end
       end
@@ -118,7 +118,7 @@ RSpec.describe "Api::V1::Forms", type: :request do
     context "And with invalid params" do
       before do
         @other_user = create(:user)
-        post "/api/v1/forms", params: {form: {}}, headers: header_with_authentication(@user)
+        post "/api/v1/forms", params: {form: {}}, headers: header_with_authentication(@other_user)
       end
 
       it "returns 400" do
@@ -144,7 +144,7 @@ RSpec.describe "Api::V1::Forms", type: :request do
           before do
             @form = create(:form, user: @user)
             @form_attributes = attributes_for(:form, id: @form.id)
-            put "/api/v1/forms/#{@form.friendly_id}", params: {form: @form_attributes}, eaders: header_with_authentication(@user)
+            put "/api/v1/forms/#{@form.friendly_id}", params: {form: @form_attributes}, headers: header_with_authentication(@user)
           end
 
           it "returns 200" do
@@ -169,7 +169,7 @@ RSpec.describe "Api::V1::Forms", type: :request do
           before do
             @form = create(:form)
             @form_attributes = attributes_for(:form, id: @form.id)
-            put "/api/v1/forms/#{form.friendly_id}", params:{form: @form_attributes}, headers: header_with_authentication(@user)
+            put "/api/v1/forms/#{@form.friendly_id}", params: {form: @form_attributes}, headers: header_with_authentication(@user)
           end
 
           it "returns 403" do
@@ -238,7 +238,8 @@ RSpec.describe "Api::V1::Forms", type: :request do
 
       context "When form dont exists" do
         it "returns 404" do
-          delete "/api/v1/forms/#{@form.friendly_id}", params: {}, headers: header_with_authentication(@user)
+          delete "/api/v1/forms/#{FFaker::Lorem.word}", params: {}, headers: header_with_authentication(@user)
+          expect_status(404)
         end
       end
 
