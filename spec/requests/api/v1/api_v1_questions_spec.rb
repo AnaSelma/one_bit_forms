@@ -3,20 +3,20 @@ require 'rails_helper'
 RSpec.describe "Api::V1::Questions", type: :request do
 
   describe "POST /questions" do
-    context "with Invalid authentication headers" do
+    context "With Invalid authentication headers" do
       it_behaves_like :deny_without_authorization, :post, "/api/v1/questions"
     end
 
     context "With Valid authentication headers" do
       before do
-        @user = Create(:user)
+        @user = create(:user)
       end
 
-      context "And wuith valid params" do
+      context "And with valid params" do
         before do
-          @form = create(:form, user: #user)
+          @form = create(:form, user: @user)
           @question_attributes = attributes_for(:question)
-          post "/api/v1/questions", params: {question: @question_attributes, form_id: @form.id}, headers: header_with_authentication(@user)
+          post "/api/v1/questions", params: {question: @question_attributes, form_id: @form.id},  headers: header_with_authentication(@user)
         end
 
         it "return 200" do

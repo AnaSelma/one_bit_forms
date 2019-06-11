@@ -17,6 +17,7 @@ services:
       - '.:/onebitforms'
     volumes_from:
     - box
+    tty: true
 
   box:
     image: busybox
