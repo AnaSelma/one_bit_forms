@@ -11,7 +11,14 @@ class Api::V1::QuestionsController < Api::V1::ApiController
   end
 
   def update
-    @question.update(question_params)
+    ActiveRecord::Base.transaction do
+      @question.update(question_params)
+      if @questions_to_update.present?
+        @questions_to_update.each do |question|
+          question.save
+        end
+      end
+    end
     render json: @question
   end
 
@@ -23,7 +30,31 @@ class Api::V1::QuestionsController < Api::V1::ApiController
   private
 
     def set_question
-      @question = Question.find(params[:id])
+       @question = Question.find(params[:id])
+
+       if params[:action] = 'update'
+        @new_position = params[:position]
+        if @new_position.present? && @question.position.present?
+          set_questions_to_update
+        end
+      end
+    end
+
+    def set_questions_to_update
+      if @new_position > @question.position
+        @questions_to_update = Question.where("form_id = ? AND position > ? AND position <= ?",
+          @question.form_id, @question.position, @new_position)
+      elsif @new_position < @question.position
+        @questions_to_update = Question.where("form_id = ? AND position >= ? AND position < ?",
+          @question.form_id, @new_position, @question.position)
+      end
+
+      if (@questions_to_update.present?)
+        @questions_to_update.each do |question|
+          question.position -= 1 if @new_position > @question.position
+          question.position += 1 if @new_position < @question.position
+        end
+      end
     end
 
     def set_form
@@ -37,6 +68,6 @@ class Api::V1::QuestionsController < Api::V1::ApiController
     end
 
     def question_params
-       params.require(:question).permit(:title, :kind, :required)
+       params.require(:question).permit(:title, :kind, :required, :position)
     end
 end
