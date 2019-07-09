@@ -9,14 +9,15 @@ class Api::V1::AnswersController < Api::V1::ApiController
     render json: @questions, include: 'questions_answers'
   end
 
-  def show
-    render json: @answer, include: 'questions_answers'
-  end
-
   def create
     @answer = Answer.create_with_questions_answers(@form, params["questions_answers"])
     render json: @answer
   end
+  
+  def show
+    render json: @answer, include: 'questions_answers'
+  end
+
 
   def destroy
     @answer.destroy
@@ -30,7 +31,7 @@ class Api::V1::AnswersController < Api::V1::ApiController
     end
 
     def set_form
-      @form = (@answer)? @answer.form : Form.find(params[:form_id])
+      @form = (@answer)? @answer.form : Form.friendly.find(params[:form_id])
     end
 
     def allow_only_owner
